@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="inner">
+        {% for obj in products %}
+        <div class="item">
+            {% if obj.image %}
+            <img src="{{ obj.image.url }}" alt="{{ obj.name }} Image" class="img">
+            {% else %}
+            <img src="{% static 'nophoto.png' %}" alt="Default Photo" class="img">
+            {% endif %}
+            <div class="product-name">{{ obj.name }}</div>
+            <div class="product-cost">{{ obj.cost }}</div>
+            <button class="btn" id="btn1">Add</button>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if products.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ products.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current-page">
+                Page {{ products.number }} of {{ products.paginator.num_pages }}.
+            </span>
+
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">next</a>
+                <a href="?page={{ products.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+<div class="usercard" id="usercard">
+
+</div>
+{% endblock %}

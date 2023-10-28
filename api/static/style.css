@@ -1,0 +1,127 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    color: var(--tg-theme-text-color);
+    background: var(--tg-theme-bg-color);
+}
+
+.container {
+    max-width: 390px;
+}
+
+.inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px 200px 200px;
+}
+
+
+.item {
+    text-align: center;
+}
+
+.img {
+    width: 150px;
+    height: 100px;
+}
+
+.product-cost {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 6px;
+}
+
+.product-name {
+    text-align: center;
+    padding: 6px 6px;
+    font-size: 16px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    background: rgb(248, 168, 24);
+    border-radius: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+
+    transition: background .2s linear;
+}
+
+.btn:hover {
+    background: lightgreen;
+}
+
+.usercard {
+    text-align: center;
+}
+
+/* Pagination container */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Pagination links */
+.step-links a {
+    padding: 5px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #007BFF; /* Link color */
+    border: 1px solid #007BFF; /* Link border color */
+    border-radius: 3px;
+    background-color: #fff; /* Link background color */
+    transition: background-color 0.3s ease;
+}
+
+.step-links a:hover {
+    background-color: #007BFF; /* Hover background color */
+    color: #fff; /* Hover text color */
+}
+
+/* Current page indicator */
+.current-page {
+    font-weight: bold;
+    margin: 0 10px;
+    color: #333; /* Current page text color */
+}
+
+/* Adjust styles for the "first" and "last" links */
+.step-links a:first-child,
+.step-links a:last-child {
+    border-radius: 5px;
+}
+
+/* Optional: Add spacing between pagination links for better readability */
+.step-links a:not(:last-child) {
+    margin-right: 5px;
+}
+
+
+/* Style for category buttons */
+.category-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    color: #fff; /* Text color on hover */
+}
+
+/* Optional: Center the buttons horizontally */
+.category-buttons-container {
+    text-align: center;
+}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ object.name }}{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1 style="text-align: center">{{ object.name }}</h1>
+    <div class="inner">
+        {% for sub in subcategories %}
+        <div class="item">
+            <a href="{% url 'subcategory-detail' sub.pk %}">
+                {% if obj.image %}
+                <img src="{{ obj.image.url }}" alt="{{ obj.name }} Image" class="img">
+                {% else %}
+                <img src="{% static 'nophoto.png' %}" alt="Default Photo" class="img">
+                {% endif %}
+                <div class="product-name">{{ sub.name }}</div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

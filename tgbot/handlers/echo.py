@@ -1,0 +1,20 @@
+from aiogram import types, Dispatcher
+from tgbot.db.queries import Database
+from tgbot.keyboards.reply import main_menu_kb
+
+
+async def bot_echo_all(m: types.Message, db: Database):
+    await m.answer(m.text + "%%%%%%%%%%%%%%%", reply_markup=main_menu_kb())
+
+
+# state_name = await state.get_state()
+# text = [
+#     f'Эхо в состоянии {hcode(state_name)}',
+#     'Содержание сообщения:',
+#     hcode(message.text)
+# ]
+# await message.answer('\n'.join(text))
+
+
+def register_echo(dp: Dispatcher):
+    dp.register_message_handler(bot_echo_all, state="*", content_types=types.ContentTypes.ANY)

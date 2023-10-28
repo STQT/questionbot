@@ -1,0 +1,64 @@
+{% extends "admin/change_list.html" %}
+{% load admin_list %}
+{% load i18n %}
+{% block content %}
+
+    {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
+
+    {% block search %}
+        {% search_form cl %}
+    {% endblock %}
+
+    <div class="col-12">
+        <div>
+            <form id="changelist-form" method="post"
+                  {% if cl.formset and cl.formset.is_multipart %}enctype="multipart/form-data"{% endif %}
+                  novalidate>{% csrf_token %}
+                <div id="content-main">
+                    {% if cl.formset and cl.formset.errors %}
+                        <div class="alert alert-warning" role="alert">
+                            {% if cl.formset.total_error_count == 1 %}
+                                {% trans "Quyidagi xatoni tuzating." %}
+                            {% else %}
+                                {% trans "Quyidagi xatolarni tuzating." %}
+                            {% endif %}
+                        </div>
+                        {{ cl.formset.non_form_errors }}
+                    {% endif %}
+                    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+                        <div class="row">
+                            <div class="col-12">
+                                {% if cl.formset %}
+                                    <div>{{ cl.formset.management_form }}</div>
+                                {% endif %}
+
+                                {% block result_list %}
+                                    <div class="change-list-actions row pb-3">
+                                        <div class="col-12">
+                                            {% if action_form and actions_on_top and cl.show_admin_actions %}
+                                                {% admin_actions %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% result_list cl %}
+                                    {% if action_form and actions_on_bottom and cl.show_admin_actions %}
+                                        <div class="row">
+                                            <div class="col-12">
+                                                {% admin_actions %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% block pagination %}{% pagination cl %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br class="clear"/>
+    </div>
+{% endblock %}

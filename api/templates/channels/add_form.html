@@ -1,0 +1,7 @@
+{% extends 'admin/change_form.html' %}
+
+{% block content %}
+    <!-- Your custom form content here -->
+    <h2>Kanalni "Qo'shish" tugmasini bosib kanaldan qo'shasiz</h2><br/>
+    <a href="https://t.me/{{ telegram_username }}?start=channel{{ owner_guid }}" class="btn btn-primary">Qo'shish</a>
+{% endblock %}

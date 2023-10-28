@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+
+exec celery -A core.celery_app worker -l info

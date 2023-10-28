@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Categories</h1>
+<div class="container">
+    <div class="inner">
+        <div class="category-buttons-container">
+            {% for category in object_list %}
+            <a href="{% url 'category-detail' category.pk %}" class="category-button">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
