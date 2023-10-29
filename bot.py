@@ -59,7 +59,6 @@ if config.tg_bot.debug is False:
     storage = RedisStorage2(host="redis", port=6380, db=0)
 bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 dp = Dispatcher(bot, storage=storage)
-logging.info(config)
 bot['config'] = config
 
 register_all_middlewares(dp, config,
