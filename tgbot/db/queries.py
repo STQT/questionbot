@@ -4,7 +4,6 @@ from aiohttp import ClientSession, ClientResponseError, ClientError
 
 
 class Database:
-    # DELIVERY_COST = "10000"
 
     def __init__(self, base_url):
         self.base_url = base_url
@@ -16,8 +15,10 @@ class Database:
             async with session.request(method, url, json=data) as resp:
                 logging.info(resp.status)
                 logging.info(resp.text)
+                r = await resp.json()
+                logging.info(r)
                 if resp.status in [200, 201]:
-                    return await resp.json()
+                    return r
                 elif resp.status in [400, 401, 403, 404]:
                     raise ClientError()
                 else:
@@ -25,6 +26,7 @@ class Database:
                                               resp.history,
                                               status=resp.status,
                                               message=resp.reason)
+
     async def send_token_to_server(self, user_id, token):
         return await self.make_request("POST", "/create-chat/",
                                        {'token': token, 'chat_id': user_id})
@@ -40,6 +42,23 @@ class Database:
     async def get_poll(self, pk):
         return await self.make_request("GET", f"/polls/{pk}/")
 
-
     async def get_poll_owner_channels(self, pk):
         return await self.make_request("GET", f"/polls/channel/list/{pk}/")
+
+    async def vote(self, user_id, poll_id, choice):
+        url = self.base_url + "/polls/votes/create/"
+        data = {'poll': poll_id,
+                'user_id': user_id,
+                "choice": choice}
+        async with ClientSession() as session:
+            async with session.request("POST", url, json=data) as resp:
+                c = await resp.json()
+                logging.info(c)
+                if resp.status in [200, 201]:
+                    response = await resp.json(), True
+                    return response
+                elif resp.status == 400:
+                    response = await resp.json(), False
+                    return response
+                else:
+                    raise ClientError()

@@ -50,6 +50,7 @@ async def user_subscription_msg(bot, chat_id_list, user_id):
             unsubscribed_channel_list.append(chat)
     return unsubscribed_channel_list
 
+
 async def check_subscriber_with_poll_id(m: types.Message, db: Database, poll, user_id):
     poll_id = poll['id']
     channel_list = await db.get_poll_owner_channels(poll_id)
@@ -60,6 +61,7 @@ async def check_subscriber_with_poll_id(m: types.Message, db: Database, poll, us
         return await m.answer("Ushbu botdan foydalanish uchun quyidagi kanallarga a'zo bo'lish kerak",
                               reply_markup=channels_keyboard(unsubscribed_channel_list, poll_id))
     return await m.answer(poll['text'], reply_markup=choices_kb(poll_id, poll['choices']), parse_mode="HTML")
+
 
 async def main_start_handler(m: types.Message, state: FSMContext, db: Database):
     args: str = m.get_args()
@@ -86,6 +88,8 @@ async def main_start_handler(m: types.Message, state: FSMContext, db: Database):
             await m.answer("Server bilan bog'lanishda xato sodir bo'ldi.")
         except ClientError:
             await m.answer("Savol topilmadi.")
+    else:
+        await m.answer("Bot test rejimida ishlayapti", reply_markup=types.ReplyKeyboardRemove())
 
 
 async def submit_subscribe(call: types.CallbackQuery, db: Database):
@@ -96,10 +100,19 @@ async def submit_subscribe(call: types.CallbackQuery, db: Database):
     poll = await db.get_poll(poll_id)
     await check_subscriber_with_poll_id(call.message, db, poll, call.from_user.id)
 
+
 async def submit_vote(call: types.CallbackQuery, db: Database):
     await call.answer("Tanlandi")
     poll, choice = call.data.split(":")
-    logging.info((poll, choice))
+    try:
+        vote, is_voted = await db.vote(user_id=call.from_user.id, poll_id=poll, choice=choice)
+        await call.message.delete()
+        if is_voted:
+            await call.message.answer(f"Sizning ovozingiz <b>{vote['choice_text']}</b> javobga qabul qilindi", parse_mode="HTML")
+        else:
+            await call.message.answer(vote['poll'][-1], parse_mode="HTML")
+    except ClientError:
+        await call.message.answer("Server bilan bog'lanishda xato sodir bo'ldi birozdan so'ng xarakat qilib ko'ring")
 
 
 def register_start(dp: Dispatcher):

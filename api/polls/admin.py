@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 
 from django.contrib.auth import get_user_model
@@ -38,15 +39,9 @@ class PollAdmin(StaffAdmin):
     form = PollModelAdminForm
 
     def save_model(self, request, obj, form, change):
-        utc_time = obj.closed_at  # Assuming the UTC time is already assigned to the created_at field
-
-        # Define the target timezone
-        target_timezone = pytz.timezone('Asia/Tashkent')
-
-        # Convert the UTC time to the target timezone
+        utc_time = obj.closed_at
+        target_timezone = pytz.timezone(settings.TIME_ZONE)
         tashkent_time = utc_time.astimezone(target_timezone)
-        print(tashkent_time, "$$$$$$$$$$$$$$$$$$$$$$$$$")
-        # Assign the converted time back to the created_at field
         obj.closed_at = tashkent_time
 
         obj.save()

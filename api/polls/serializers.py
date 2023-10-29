@@ -23,16 +23,27 @@ class PollSerializer(serializers.ModelSerializer):
 
 
 class VoteSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=Voter.objects.all()[:5], required=False)
+    user_id = serializers.IntegerField(write_only=True)
+    choice_text = serializers.SerializerMethodField()
+
     class Meta:
         model = Vote
         fields = '__all__'
 
+    def get_choice_text(self, obj):
+        return obj.choice.text
+
     def validate(self, data):
         poll = data['poll']
-        user = data['user']
-        _voter, _created = Voter.objects.get_or_create(id=user.id)
-        if Vote.objects.filter(user=user, poll=poll).exists():
-            raise serializers.ValidationError('You have already voted for this poll.')
+        user_id = data['user_id']
+
+        voter, _created = Voter.objects.get_or_create(id=user_id)
+        vote = Vote.objects.filter(user=voter, poll=poll).select_related("choice")
+        if vote.exists():
+            raise serializers.ValidationError(
+                {"poll": f"Siz allaqachon ushbu <b>{vote.first().choice.text}</b> javobni tanlab bo'lgansiz"})
         if poll.closed_at and timezone.localtime(timezone.now(), pytz.timezone(settings.TIME_ZONE)) > poll.closed_at:
-            raise serializers.ValidationError('This poll has already ended.')
+            raise serializers.ValidationError({"poll": "Ushbu so'rovnoma allaqachon tugagan"})
+        data['user'] = voter
         return data
