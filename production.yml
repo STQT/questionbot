@@ -44,6 +44,8 @@ services:
     restart: always
     env_file:
       - ".env"
+    ports:
+      - '5070:5000'
     networks:
       - tg_bot
 

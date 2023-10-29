@@ -15,6 +15,7 @@ class TgBot:
     debug: bool
     token: str
     admin_ids: list[int]
+    host: str
 
 @dataclass
 class Miscellaneous:
@@ -37,6 +38,7 @@ def load_config(path: str = None):
             debug=env.bool("BOT_DEBUG"),
             token=env.str("BOT_TOKEN"),
             admin_ids=list(map(int, env.list("ADMINS"))),
+            host=env.str("BASE_URL")
         ),
         db=DbConfig(
             base_url=env.str("API_BASE_URL")
