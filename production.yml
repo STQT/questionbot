@@ -66,8 +66,6 @@ services:
     image: redis
     container_name: questionbot_redis
     hostname: redis
-    ports:
-      - "6380:6380"
     volumes:
       - questionbot_redis_data:/data
     command: redis-server --port 6380
