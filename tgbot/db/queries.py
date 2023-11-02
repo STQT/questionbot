@@ -13,13 +13,12 @@ class Database:
 
         async with ClientSession() as session:
             async with session.request(method, url, json=data) as resp:
-                logging.info(resp.status)
-                logging.info(resp.text)
                 r = await resp.json()
-                logging.info(r)
                 if resp.status in [200, 201]:
                     return r
                 elif resp.status in [400, 401, 403, 404]:
+                    import sentry_sdk
+                    sentry_sdk.capture_message(r)
                     raise ClientError()
                 else:
                     raise ClientResponseError(resp.request_info,
