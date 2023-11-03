@@ -17,8 +17,6 @@ class Database:
                 if resp.status in [200, 201]:
                     return r
                 elif resp.status in [400, 401, 403, 404]:
-                    import sentry_sdk
-                    sentry_sdk.capture_message(r)
                     raise ClientError()
                 else:
                     raise ClientResponseError(resp.request_info,
