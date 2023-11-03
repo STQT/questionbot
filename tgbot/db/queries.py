@@ -13,9 +13,8 @@ class Database:
 
         async with ClientSession() as session:
             async with session.request(method, url, json=data) as resp:
-                r = await resp.json()
                 if resp.status in [200, 201]:
-                    return r
+                    return await resp.json()
                 elif resp.status in [400, 401, 403, 404]:
                     raise ClientError()
                 else:
