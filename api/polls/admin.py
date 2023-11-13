@@ -43,7 +43,6 @@ class PollAdmin(StaffAdmin):
         target_timezone = pytz.timezone(settings.TIME_ZONE)
         tashkent_time = utc_time.astimezone(target_timezone)
         obj.closed_at = tashkent_time
-
         obj.save()
 
     def truncated_text(self, obj):

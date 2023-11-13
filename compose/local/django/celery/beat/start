@@ -5,4 +5,4 @@ set -o nounset
 
 
 rm -f './celerybeat.pid'
-exec celery -A core.celery_app beat -l info
+exec celery -A api.core.celery_app beat -l info

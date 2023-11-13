@@ -18,7 +18,7 @@ class CustomUser(AbstractUser):
 
 
 class Voter(models.Model):
-    id = models.IntegerField(_("Ovoz beruvchi ID"), primary_key=True, editable=False)
+    id = models.BigIntegerField(_("Ovoz beruvchi ID"), primary_key=True, editable=False)
     created_at = models.DateField(auto_now_add=True)
 
     class Meta:

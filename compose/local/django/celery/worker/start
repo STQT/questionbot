@@ -4,4 +4,4 @@ set -o errexit
 set -o nounset
 
 
-exec celery -A core.celery_app worker -l info
+exec celery -A api.core.celery_app worker -l info

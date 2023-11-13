@@ -6,7 +6,7 @@ volumes:
   questionbot_redis_data:
 
 services:
-  django:
+  django: &django
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
@@ -72,7 +72,23 @@ services:
     command: redis-server --port 6380 --appendonly yes
     networks:
       - tg_bot
+  celeryworkerbeat:
+    <<: *django
+    container_name: questionbot_celeryworkerbeat
+    depends_on:
+      - redis
+      - postgres
+    ports: [ ]
+    command: /start-celeryworker
 
+  celerybeat:
+    <<: *django
+    container_name: questionbot_celerybeat
+    depends_on:
+      - redis
+      - postgres
+    ports: [ ]
+    command: /start-celerybeat
 networks:
   tg_bot:
     driver: bridge

@@ -11,6 +11,7 @@ from .serializers import PollSerializer, VoteSerializer
 
 import requests
 
+from .tasks import update_vote_message
 from ..channels.models import Channel
 from ..channels.serializers import ChannelListSerializer
 
@@ -23,6 +24,11 @@ class PollDetailView(generics.RetrieveAPIView):
 class VoteCreateView(generics.CreateAPIView):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
+
+    def perform_create(self, serializer):
+        vote = serializer.save()
+        update_vote_message.delay(vote.poll.message_id, vote.poll.channel.channel_id, vote.poll_id)
+
 
 class PollOwnerChatsView(APIView):
     serializer_class = ChannelListSerializer
@@ -65,11 +71,9 @@ def poll_send(request, pk):
         'parse_mode': 'HTML'
     }
 
-    # Send the message using the Telegram Bot API
     url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
     response = requests.post(url, json=message)
 
-    # Check if the message was sent successfully
     if response.status_code == 200:
         poll.message_id = str(response.json()['result']['message_id'])
         poll.is_sent = True
