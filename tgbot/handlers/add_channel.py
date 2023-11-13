@@ -7,12 +7,13 @@ from aiogram.utils.exceptions import Unauthorized
 from aiohttp import ClientResponseError, ClientError, ClientSession
 
 from tgbot.db.queries import Database
+from tgbot.keyboards.reply import cancel_kb_text
 from tgbot.misc.states import AddChannel
 
 
 
 async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
-    if m.text == "cancel_kb_text":
+    if m.text == cancel_kb_text:
         await state.finish()
         await m.answer("Kanal qo'shish uchun sayt orqali qo'shish tugmasini bosing, iltimos")
     data = await state.get_data()
