@@ -18,6 +18,8 @@ class Database:
 
         async with ClientSession() as session:
             async with session.request(method, url, json=data) as resp:
+                logging.info("Request")
+                logging.info(resp.status)
                 if resp.status in [200, 201]:
                     return await resp.json()
                 elif resp.status == 400:
