@@ -111,4 +111,5 @@ sentry_sdk.init(
     traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
 )
 CORS_ALLOWED_ORIGINS = ["https://questionbot.itlink.uz", ]
-CSRF_TRUSTED_ORIGINS = ["http://django:8000"]
+CSRF_COOKIE_SECURE = False
+CSRF_USE_SESSIONS = True
