@@ -4,6 +4,11 @@ from aiohttp import ClientSession, ClientResponseError, ClientError
 
 
 class Database:
+    class NotFoundException(Exception):
+        ...
+
+    class BadRequestError(Exception):
+        ...
 
     def __init__(self, base_url):
         self.base_url = base_url
@@ -15,7 +20,12 @@ class Database:
             async with session.request(method, url, json=data) as resp:
                 if resp.status in [200, 201]:
                     return await resp.json()
-                elif resp.status in [400, 401, 403, 404]:
+                elif resp.status == 400:
+                    r = await resp.json()
+                    raise self.BadRequestError(r)
+                elif resp.status == 404:
+                    raise self.NotFoundException("Not found enpoint")
+                elif resp.status in [401, 403]:
                     raise ClientError()
                 else:
                     raise ClientResponseError(resp.request_info,
