@@ -23,7 +23,7 @@ def choices_kb(poll, choices: list):
 def channels_keyboard(channels, poll_pk):
     inline_keyboard = []
     for channel in channels:
-        inline_keyboard.append([InlineKeyboardButton(text=channel['name'], url="https://t.me/")])
+        inline_keyboard.append([InlineKeyboardButton(text=channel['name'], url=channel['link'])])
     inline_keyboard.append([InlineKeyboardButton(text="A'zo bo'ldim", callback_data="submit_channel:" + str(poll_pk))])
     markup = InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
     return markup
