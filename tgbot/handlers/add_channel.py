@@ -12,10 +12,12 @@ from tgbot.misc.states import AddChannel
 
 
 async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
+    if m.text == "cancel_kb_text":
+        await state.finish()
+        await m.answer("Kanal qo'shish uchun sayt orqali qo'shish tugmasini bosing, iltimos")
     data = await state.get_data()
     if m.is_forward() and m.forward_from_chat.type == "channel" and 'guid' in data:
         try:
-            await m.send_copy(m.from_user.id)
             await m.bot.get_chat_administrators(m.forward_from_chat.id)
             try:
                 await db.create_channel(data['guid'], str(m.forward_from_chat.id), m.forward_from_chat.title)

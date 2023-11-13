@@ -8,7 +8,7 @@ from aiohttp import ClientError, ClientResponseError
 
 from tgbot.db.queries import Database
 from tgbot.handlers.register import register_start_message
-from tgbot.keyboards.reply import main_menu_kb
+from tgbot.keyboards.reply import main_menu_kb, cancel_kb
 from tgbot.misc.states import MainMenuState, UserRegisterState, AddChannel
 
 
@@ -69,7 +69,7 @@ async def main_start_handler(m: types.Message, state: FSMContext, db: Database):
         _channel, guid = args.split("channel")
         await m.answer("Kanalni platformaga qo'shish uchun quyidagi amallarni bajaring:\n"
                        "1. Kanalga ushbu botni qo'shing\n"
-                       "2. Kanaldan biron bir xabarni ushbu botga yo'naltiring (переслать)")
+                       "2. Kanaldan biron bir xabarni ushbu botga yo'naltiring (переслать)", reply_markup=cancel_kb())
         await AddChannel.get_channel_msg.set()
         await state.update_data(guid=guid)
     elif args.startswith("poll"):

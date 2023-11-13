@@ -23,24 +23,20 @@ class Database:
         async with (ClientSession(headers={'Referer': 'http://django:8000/'}, timeout=aiohttp.ClientTimeout(total=10))
                     as session):
             async with session.request(method, url, json=data) as resp:
-                try:
-                    if resp.status in [200, 201]:
-                        return await resp.json()
-                    elif resp.status == 400:
-                        r = await resp.json()
-                        if r == ['Channel with this ID exists.']:
-                            raise self.ChannelAlreadyExists
-                        raise ClientError()
-                    elif resp.status in [401, 403, 404]:
-                        raise ClientError()
-                    else:
-                        raise ClientResponseError(resp.request_info,
-                                                  resp.history,
-                                                  status=resp.status,
-                                                  message=resp.reason)
-                except Exception as e:
-                    logging.error(f"Error processing response: {e}")
-                    raise
+                if resp.status in [200, 201]:
+                    return await resp.json()
+                elif resp.status == 400:
+                    r = await resp.json()
+                    if r == ['Channel with this ID exists.']:
+                        raise self.ChannelAlreadyExists
+                    raise ClientError()
+                elif resp.status in [401, 403, 404]:
+                    raise ClientError()
+                else:
+                    raise ClientResponseError(resp.request_info,
+                                              resp.history,
+                                              status=resp.status,
+                                              message=resp.reason)
 
     async def send_token_to_server(self, user_id, token):
         return await self.make_request("POST", "/create-chat/",
