@@ -49,4 +49,4 @@ class ChannelSerializer(serializers.ModelSerializer):
 class ChannelListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
-        fields = "channel_id", "name", "link"
+        fields = "channel_id", "name",
