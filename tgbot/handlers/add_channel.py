@@ -26,7 +26,8 @@ async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
             await m.bot.get_chat_administrators(m.forward_from_chat.id)
             try:
                 await db.create_channel(data['guid'], str(m.forward_from_chat.id), m.forward_from_chat.title)
-                await m.answer("Sizning kanalingiz platformaga qo'shildi")
+                await m.answer("Sizning kanalingiz platformaga qo'shildi",
+                               reply_markup=types.ReplyKeyboardRemove())
                 await state.finish()
             except ClientResponseError:
                 await m.answer("Server bilan bog'lanishdagi xato, birozdan so'ng urunib ko'ring")
