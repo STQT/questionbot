@@ -59,6 +59,9 @@ class Database:
     async def get_poll(self, pk):
         return await self.make_request("GET", f"/polls/{pk}/")
 
+    async def test(self):
+        return await self.make_request("GET", f"/test/")
+
     async def get_poll_owner_channels(self, pk):
         return await self.make_request("GET", f"/polls/channel/list/{pk}/")
 
