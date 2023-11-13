@@ -23,7 +23,9 @@ def choices_kb(poll, choices: list):
 def channels_keyboard(channels, poll_pk):
     inline_keyboard = []
     for channel in channels:
-        inline_keyboard.append([InlineKeyboardButton(text=channel['name'], url=channel['link'])])
+        channel_link = channel['link']
+        channel_link = "https://t.me/" + channel_link if channel_link.startswith("@") else channel_link
+        inline_keyboard.append([InlineKeyboardButton(text=channel['name'], url=channel_link)])
     inline_keyboard.append([InlineKeyboardButton(text="A'zo bo'ldim", callback_data="submit_channel:" + str(poll_pk))])
     markup = InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
     return markup
