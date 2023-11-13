@@ -128,7 +128,6 @@ MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'users.CustomUser'
-BOT_USERNAME = env("BOT_USERNAME", default="kaireke_sultan")
 
 # ADMIN
 # ------------------------------------------------------------------------------

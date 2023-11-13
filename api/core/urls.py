@@ -47,5 +47,5 @@ if settings.DEBUG:
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 admin.site.site_title = "Boshqaruv paneli"
 admin.site.site_header = "Boshqaruv paneli"
-admin.site.site_url = "https://t.me/" + settings.BOT_USERNAME
+admin.site.site_url = "https://t.me/" + settings.TELEGRAM_USERNAME
 admin.site.index_title = "Question"

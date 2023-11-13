@@ -13,8 +13,7 @@ from tgbot.misc.states import AddChannel
 
 async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
     data = await state.get_data()
-    logging.info(data)
-    if m.forward_from_chat and m.forward_from_chat.type == "channel" and 'guid' in data:
+    if m.is_forward() and m.forward_from_chat.type == "channel" and 'guid' in data:
         try:
             await m.bot.get_chat_administrators(m.forward_from_chat.id)
             try:

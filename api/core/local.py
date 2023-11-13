@@ -67,4 +67,3 @@ CELERY_TASK_EAGER_PROPAGATES = True
 SPECTACULAR_SETTINGS['SERVERS'] = [  # noqa F405
     {"url": "http://localhost:8000", "description": "Local Development server"},
 ]
-TELEGRAM_USERNAME = "firmanombot"
