@@ -16,24 +16,31 @@ class Database:
     async def make_request(self, method, endpoint, data=None):
         url = self.base_url + endpoint
 
-        async with ClientSession(headers={'Referer': 'http://django:8000/'}) as session:
+        async with ClientSession(headers={'Referer': 'http://django:8000/'}, timeout=10) as session:
             async with session.request(method, url, json=data) as resp:
                 logging.info("Request")
-                logging.info(resp.status)
-                if resp.status in [200, 201]:
-                    return await resp.json()
-                elif resp.status == 400:
-                    r = await resp.json()
-                    raise self.BadRequestError(r)
-                elif resp.status == 404:
-                    raise self.NotFoundException("Not found enpoint")
-                elif resp.status in [401, 403]:
-                    raise ClientError()
-                else:
-                    raise ClientResponseError(resp.request_info,
-                                              resp.history,
-                                              status=resp.status,
-                                              message=resp.reason)
+                logging.info(f"{method} {url}")
+                logging.info(f"Request data: {data}")
+
+                logging.info(f"Response status: {resp.status}")
+                try:
+                    if resp.status in [200, 201]:
+                        return await resp.json()
+                    elif resp.status == 400:
+                        r = await resp.json()
+                        raise self.BadRequestError(r)
+                    elif resp.status == 404:
+                        raise self.NotFoundException("Not found enpoint")
+                    elif resp.status in [401, 403]:
+                        raise ClientError()
+                    else:
+                        raise ClientResponseError(resp.request_info,
+                                                  resp.history,
+                                                  status=resp.status,
+                                                  message=resp.reason)
+                except Exception as e:
+                    logging.error(f"Error processing response: {e}")
+                    raise
 
     async def send_token_to_server(self, user_id, token):
         return await self.make_request("POST", "/create-chat/",
