@@ -27,6 +27,7 @@ class Database:
                     return await resp.json()
                 elif resp.status == 400:
                     r = await resp.json()
+                    logging.info(r)
                     if r == ['Channel with this ID exists.']:
                         raise self.ChannelAlreadyExists
                     raise ClientError()
