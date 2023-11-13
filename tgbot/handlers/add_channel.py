@@ -15,7 +15,10 @@ from tgbot.misc.states import AddChannel
 async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
     if m.text == cancel_kb_text:
         await state.finish()
-        await m.answer("Kanal qo'shish uchun sayt orqali qo'shish tugmasini bosing, iltimos")
+        await m.answer("Bekor qilindi.\n"
+                       "Kanal qo'shish uchun sayt orqali qo'shish tugmasini bosing, iltimos",
+                       reply_markup=types.ReplyKeyboardRemove())
+        return
     data = await state.get_data()
     if m.is_forward() and m.forward_from_chat.type == "channel" and 'guid' in data:
         try:
