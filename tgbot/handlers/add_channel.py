@@ -21,11 +21,9 @@ async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
                 await db.create_channel(data['guid'], str(m.forward_from_chat.id), m.forward_from_chat.title)
                 await m.answer("Sizning kanalingiz platformaga qo'shildi")
                 await state.finish()
-            except Database.BadRequestError as e:
-                await m.answer(f"Error: {e}")
             except ClientResponseError:
                 await m.answer("Server bilan bog'lanishdagi xato, birozdan so'ng urunib ko'ring")
-            except ClientError:
+            except Database.BadRequestError:
                 await m.answer("Ushbu kanal allaqachon qo'shilgan")
 
         except Unauthorized:

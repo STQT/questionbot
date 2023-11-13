@@ -11,6 +11,9 @@ class Database:
     class BadRequestError(Exception):
         ...
 
+    class ChannelAlreadyExists(Exception):
+        ...
+
     def __init__(self, base_url):
         self.base_url = base_url
 
@@ -23,7 +26,12 @@ class Database:
                 try:
                     if resp.status in [200, 201]:
                         return await resp.json()
-                    elif resp.status in [400, 401, 403, 404]:
+                    elif resp.status == 400:
+                        r = await resp.json()
+                        if r == ['Channel with this ID exists.']:
+                            raise self.ChannelAlreadyExists
+                        raise ClientError()
+                    elif resp.status in [401, 403, 404]:
                         raise ClientError()
                     else:
                         raise ClientResponseError(resp.request_info,
