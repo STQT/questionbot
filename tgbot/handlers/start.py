@@ -7,9 +7,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiohttp import ClientError, ClientResponseError
 
 from tgbot.db.queries import Database
-from tgbot.handlers.register import register_start_message
-from tgbot.keyboards.reply import main_menu_kb, cancel_kb
-from tgbot.misc.states import MainMenuState, UserRegisterState, AddChannel
+from tgbot.keyboards.reply import cancel_kb
+from tgbot.misc.states import AddChannel
 
 
 def choices_kb(poll, choices: list):

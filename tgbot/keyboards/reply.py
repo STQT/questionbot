@@ -33,3 +33,5 @@ def cancel_kb():
     keyboard.add(KeyboardButton(text=cancel_kb_text))
     return keyboard
 
+def main_menu_kb():
+    ...
