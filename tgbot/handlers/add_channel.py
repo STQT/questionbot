@@ -23,7 +23,7 @@ async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
                 await state.finish()
             except ClientResponseError:
                 await m.answer("Server bilan bog'lanishdagi xato, birozdan so'ng urunib ko'ring")
-            except Database.BadRequestError:
+            except Database.ChannelAlreadyExists:
                 await m.answer("Ushbu kanal allaqachon qo'shilgan")
 
         except Unauthorized:
