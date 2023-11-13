@@ -1,10 +1,11 @@
 import logging
 
 from aiogram import types, Dispatcher
+from aiogram.utils.exceptions import BadRequest
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ContentTypes
 from aiogram.utils.exceptions import Unauthorized
-from aiohttp import ClientResponseError, ClientError, ClientSession
+from aiohttp import ClientResponseError
 
 from tgbot.db.queries import Database
 from tgbot.keyboards.reply import cancel_kb_text
@@ -32,7 +33,7 @@ async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
             except Database.ChannelAlreadyExists:
                 await m.answer("Ushbu kanal allaqachon qo'shilgan")
 
-        except Unauthorized:
+        except (Unauthorized, BadRequest):
             await m.answer("Ushbu bot kanalda admin sifatida qayd etilmagan, "
                            "iltimos kanalga admin sifatida qo'shib keyin kanaldan xabaringizni yo'naltiring")
     elif 'guid' not in data:
