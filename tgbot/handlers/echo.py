@@ -1,10 +1,9 @@
 from aiogram import types, Dispatcher
 from tgbot.db.queries import Database
-from tgbot.keyboards.reply import main_menu_kb
 
 
 async def bot_echo_all(m: types.Message, db: Database):
-    await m.answer(m.text + "%%%%%%%%%%%%%%%", reply_markup=main_menu_kb())
+    await m.answer("Ushbu botdan foydalanish uchun https://questionbot.itlink.uz dan ro'yxatdan o'ting")
 
 
 # state_name = await state.get_state()
