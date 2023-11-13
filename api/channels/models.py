@@ -9,8 +9,7 @@ class Channel(models.Model):
     owner = models.ForeignKey(User, verbose_name="Egasi", on_delete=models.CASCADE)
     is_active = models.BooleanField(verbose_name="Faolmi?", default=False)
     link = models.CharField(
-        verbose_name="Havola", max_length=100, help_text="Na'muna: @savolnoma yoki t.me/savolnoma",
-        blank=False, null=True)
+        verbose_name="Havola", max_length=100, help_text="Na'muna: @savolnoma yoki t.me/savolnoma")
 
     class Meta:
         default_related_name = "channels"

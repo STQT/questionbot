@@ -43,12 +43,13 @@ class Database:
         return await self.make_request("POST", "/create-chat/",
                                        {'token': token, 'chat_id': user_id})
 
-    async def create_channel(self, guid: str, channel_id: str, name: str):
+    async def create_channel(self, guid: str, channel_id: str, name: str, link: str):
         return await self.make_request("POST", "/channels/create/",
                                        {'guid': guid,
                                         'channel_id': channel_id,
                                         "name": name,
-                                        "is_active": True
+                                        "is_active": True,
+                                        "link": link
                                         })
 
     async def get_poll(self, pk):

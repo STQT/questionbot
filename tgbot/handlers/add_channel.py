@@ -23,9 +23,12 @@ async def get_channel_msg(m: types.Message, db: Database, state: FSMContext):
     data = await state.get_data()
     if m.is_forward() and m.forward_from_chat.type == "channel" and 'guid' in data:
         try:
-            await m.bot.get_chat_administrators(m.forward_from_chat.id)
+            channel_id = m.forward_from_chat.id
+            await m.bot.get_chat_administrators(channel_id)
             try:
-                await db.create_channel(data['guid'], str(m.forward_from_chat.id), m.forward_from_chat.title)
+                chat = await m.bot.get_chat(channel_id)
+                await db.create_channel(data['guid'], str(m.forward_from_chat.id),
+                                        m.forward_from_chat.title, chat['invite_link'])
                 await m.answer("Sizning kanalingiz platformaga qo'shildi",
                                reply_markup=types.ReplyKeyboardRemove())
                 await state.finish()

@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import types, Dispatcher
 from tgbot.db.queries import Database
 

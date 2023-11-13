@@ -22,8 +22,7 @@ class ChannelSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             "owner": {"read_only": True},
-            "channel_id": {"required": True},
-            "link": {"required": False}
+            "channel_id": {"required": True}
         }
 
     def create(self, validated_data):
