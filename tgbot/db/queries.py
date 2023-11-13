@@ -1,5 +1,6 @@
 import logging
 
+import aiohttp
 from aiohttp import ClientSession, ClientResponseError, ClientError
 
 
@@ -16,7 +17,8 @@ class Database:
     async def make_request(self, method, endpoint, data=None):
         url = self.base_url + endpoint
 
-        async with ClientSession(headers={'Referer': 'http://django:8000/'}, timeout=10) as session:
+        async with (ClientSession(headers={'Referer': 'http://django:8000/'}, timeout=aiohttp.ClientTimeout(total=10))
+                    as session):
             async with session.request(method, url, json=data) as resp:
                 logging.info("Request")
                 logging.info(f"{method} {url}")
