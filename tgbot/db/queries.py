@@ -23,12 +23,7 @@ class Database:
                 try:
                     if resp.status in [200, 201]:
                         return await resp.json()
-                    elif resp.status == 400:
-                        r = await resp.json()
-                        raise self.BadRequestError(r)
-                    elif resp.status == 404:
-                        raise self.NotFoundException("Not found enpoint")
-                    elif resp.status in [401, 403]:
+                    elif resp.status in [400, 401, 403, 404]:
                         raise ClientError()
                     else:
                         raise ClientResponseError(resp.request_info,
