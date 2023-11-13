@@ -20,11 +20,6 @@ class Database:
         async with (ClientSession(headers={'Referer': 'http://django:8000/'}, timeout=aiohttp.ClientTimeout(total=10))
                     as session):
             async with session.request(method, url, json=data) as resp:
-                logging.info("Request")
-                logging.info(f"{method} {url}")
-                logging.info(f"Request data: {data}")
-
-                logging.info(f"Response status: {resp.status}")
                 try:
                     if resp.status in [200, 201]:
                         return await resp.json()
@@ -59,8 +54,6 @@ class Database:
     async def get_poll(self, pk):
         return await self.make_request("GET", f"/polls/{pk}/")
 
-    async def test(self):
-        return await self.make_request("GET", f"/test/")
 
     async def get_poll_owner_channels(self, pk):
         return await self.make_request("GET", f"/polls/channel/list/{pk}/")

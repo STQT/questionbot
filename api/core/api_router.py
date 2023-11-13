@@ -16,13 +16,8 @@ router.register("users", UserViewSet)
 app_name = "v1"
 
 
-def test(request):
-    return JsonResponse(data={"status": "OK"})
-
-
 urlpatterns = router.urls
 urlpatterns += [
     path("polls/", include("api.polls.urls"), name="polls"),
     path("channels/", include("api.channels.urls"), name="channels"),
-    path("test/", test, name="test")
 ]

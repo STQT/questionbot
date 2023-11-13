@@ -89,8 +89,7 @@ async def main_start_handler(m: types.Message, state: FSMContext, db: Database):
         except ClientError:
             await m.answer("Savol topilmadi.")
     else:
-        x = await db.test()
-        await m.answer(f"Bot test rejimida ishlayapti {x}", reply_markup=types.ReplyKeyboardRemove())
+        await m.answer("Bot test rejimida ishlayapti", reply_markup=types.ReplyKeyboardRemove())
 
 
 async def submit_subscribe(call: types.CallbackQuery, db: Database):
