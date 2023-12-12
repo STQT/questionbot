@@ -4,10 +4,12 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView, \
     SpectacularJSONAPIView
+from django.views.generic import RedirectView
 from django.views import defaults as default_views
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
+    path('', RedirectView.as_view(url=settings.ADMIN_URL, permanent=True)),
     path("v1/", include("api.core.api_router"), name="v1"),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
@@ -47,5 +49,5 @@ if settings.DEBUG:
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 admin.site.site_title = "Boshqaruv paneli"
 admin.site.site_header = "Boshqaruv paneli"
-admin.site.site_url = "https://t.me/" + settings.BOT_USERNAME
+admin.site.site_url = "https://t.me/" + settings.TELEGRAM_USERNAME
 admin.site.index_title = "Question"

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from ckeditor.fields import RichTextField
+from django.db.models import Count
 from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFit
 
@@ -30,6 +31,9 @@ class Poll(models.Model):
     def __str__(self):
         return self.text
 
+    def get_choice_counts(self):
+        return self.choices.annotate(vote_count=Count('voting')).values('text', 'vote_count')  # noqa
+
 
 class Choice(models.Model):
     poll = models.ForeignKey(Poll, verbose_name="Savol", on_delete=models.CASCADE)
@@ -43,6 +47,9 @@ class Choice(models.Model):
     def __str__(self):
         return self.text
 
+    @property
+    def vote_count(self):
+        return self.vote_set.count()
 
 class Vote(models.Model):
     user = models.ForeignKey(Voter, verbose_name="Ovoz beruvchi", on_delete=models.CASCADE)

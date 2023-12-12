@@ -7,9 +7,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiohttp import ClientError, ClientResponseError
 
 from tgbot.db.queries import Database
-from tgbot.handlers.register import register_start_message
-from tgbot.keyboards.reply import main_menu_kb
-from tgbot.misc.states import MainMenuState, UserRegisterState, AddChannel
+from tgbot.keyboards.reply import cancel_kb
+from tgbot.misc.states import AddChannel
 
 
 def choices_kb(poll, choices: list):
@@ -24,7 +23,9 @@ def choices_kb(poll, choices: list):
 def channels_keyboard(channels, poll_pk):
     inline_keyboard = []
     for channel in channels:
-        inline_keyboard.append([InlineKeyboardButton(text=channel['name'], url=channel['link'])])
+        channel_link = channel['link']
+        channel_link = "https://t.me/" + channel_link if channel_link.startswith("@") else channel_link
+        inline_keyboard.append([InlineKeyboardButton(text=channel['name'], url=channel_link)])
     inline_keyboard.append([InlineKeyboardButton(text="A'zo bo'ldim", callback_data="submit_channel:" + str(poll_pk))])
     markup = InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
     return markup
@@ -69,7 +70,7 @@ async def main_start_handler(m: types.Message, state: FSMContext, db: Database):
         _channel, guid = args.split("channel")
         await m.answer("Kanalni platformaga qo'shish uchun quyidagi amallarni bajaring:\n"
                        "1. Kanalga ushbu botni qo'shing\n"
-                       "2. Kanaldan biron bir xabarni ushbu botga yo'naltiring (переслать)")
+                       "2. Kanaldan biron bir xabarni ushbu botga yo'naltiring (переслать)", reply_markup=cancel_kb())
         await AddChannel.get_channel_msg.set()
         await state.update_data(guid=guid)
     elif args.startswith("poll"):

@@ -11,8 +11,6 @@ from tgbot.db.queries import Database
 from tgbot.filters.admin import AdminFilter
 from tgbot.handlers.add_channel import register_add_channel_handlers
 from tgbot.handlers.echo import register_echo
-from tgbot.handlers.menu import register_menu
-from tgbot.handlers.register import register_register
 from tgbot.handlers.start import register_start
 from tgbot.middlewares.acl import ACLMiddleware
 from tgbot.middlewares.environment import EnvironmentMiddleware
@@ -35,8 +33,6 @@ def register_all_filters(dp):
 def register_all_handlers(dp):
     register_start(dp)
     register_add_channel_handlers(dp)
-    register_menu(dp)
-    register_register(dp)
     register_echo(dp)
 
 logging.basicConfig(
