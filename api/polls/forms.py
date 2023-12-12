@@ -13,7 +13,7 @@ class CustomCKEditorWidget(CKEditorWidget):
         value = data.get(name, None)
         if not value:
             return None
-        value = value.replace("<p>", "").replace("</p>", "").replace("&#39;", "’").replace("&rsquo;", "’").replace("&nbsp;", "").replace("<br />", "<br>")  # noqa
+        value = value.replace("<p>", "").replace("</p>", "").replace("&#39;", "’").replace("&rsquo;", "’").replace("&nbsp;", "") # noqa
         return value
 
 

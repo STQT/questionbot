@@ -74,7 +74,7 @@ def poll_send(request, pk):
     poll = get_object_or_404(Poll, pk=pk)
     if poll.owner != request.user:
         return HttpResponseForbidden("You are not the owner of this poll.")
-    message_text = poll.text
+    message_text = poll.text.replace("<br />", "\n")
 
     url = 'https://t.me/' + settings.TELEGRAM_USERNAME + "?start=poll" + str(pk)
 
@@ -100,7 +100,6 @@ def poll_send(request, pk):
         response = send_notifications_text(text=message_text,
                                            chat_id=channel.channel_id,
                                            reply_markup=inline_keyboard)
-
     if response.status_code == 200:
         poll.message_id = str(response.json()['result']['message_id'])
         poll.is_sent = True
