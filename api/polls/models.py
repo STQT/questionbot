@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from ckeditor.fields import RichTextField
+from imagekit.models import ImageSpecField
+from pilkit.processors import ResizeToFit
 
 from api.users.models import Voter
 
@@ -11,6 +13,9 @@ class Poll(models.Model):
     message_id = models.CharField("Xabar ID", max_length=10, editable=False, db_index=True,
                                   null=True, blank=True)
     text = RichTextField(max_length=1023, verbose_name="Savol matni")
+    photo = models.ImageField(verbose_name="Rasm", upload_to="pollshots", null=True, blank=True)
+    photo_compress = ImageSpecField(source='photo', format='JPEG', processors=[ResizeToFit(800, 600)],
+                                    options={'quality': 80})
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Yaratuvchi")
     channel = models.ForeignKey("channels.Channel", verbose_name="Yuboriladigan kanal", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

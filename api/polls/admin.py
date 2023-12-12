@@ -1,3 +1,5 @@
+import pytz
+
 from django.conf import settings
 from django.contrib import admin
 
@@ -31,7 +33,7 @@ class PollChoicesInline(admin.TabularInline):
             return True
         return super().has_delete_permission(request, obj)
 
-import pytz
+
 @admin.register(Poll)
 class PollAdmin(StaffAdmin):
     inlines = [PollChoicesInline]

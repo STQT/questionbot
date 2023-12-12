@@ -119,7 +119,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/app/staticfiles"
 STATICFILES_DIRS = [str(APPS_DIR / "static")]
-MEDIA_ROOT = "/app/media"
+MEDIA_ROOT = "/app/media/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = "/media/"
 

@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.http import Http404, HttpResponseForbidden, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -24,14 +26,41 @@ class VoteCreateView(generics.CreateAPIView):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
 
+
 class PollOwnerChatsView(APIView):
     serializer_class = ChannelListSerializer
+
     def get(self, request, pk):
         poll = get_object_or_404(Poll, pk=pk)
         channels = Channel.objects.filter(owner=poll.owner, is_active=True)
         serializer = self.serializer_class(channels, many=True)
         return Response(serializer.data)
 
+
+api_token = settings.TELEGRAM_BOT_TOKEN
+base_url = f'https://api.telegram.org/bot{api_token}'
+SEND_MEDIA = f"https://api.telegram.org/bot{api_token}/sendMediaGroup"
+
+
+def send_media_group(text, chat_id, media, reply_markup=None):
+    api_url = f'{base_url}/sendPhoto'
+    params = {
+        'chat_id': chat_id,
+        'caption': text,
+        'parse_mode': 'HTML',
+        'reply_markup': json.dumps({'inline_keyboard': reply_markup})
+    }
+    with open(media, 'rb') as photo:
+        files = {'photo': (photo.name, photo)}
+        response = requests.post(api_url, params=params, files=files)
+    return response
+
+
+def send_notifications_text(text, chat_id, reply_markup=None):
+    url = f'https://api.telegram.org/bot{api_token}/sendMessage'
+    data = {'chat_id': chat_id, 'reply_markup': {'inline_keyboard': reply_markup}, 'text': text, 'parse_mode': 'HTML'}
+    response = requests.post(url, json=data)
+    return response
 
 
 def poll_send(request, pk):
@@ -40,10 +69,8 @@ def poll_send(request, pk):
     poll = get_object_or_404(Poll, pk=pk)
     if poll.owner != request.user:
         return HttpResponseForbidden("You are not the owner of this poll.")
-    bot_token = settings.TELEGRAM_BOT_TOKEN
     message_text = poll.text
 
-    # Replace 'YOUR_URL' with the URL you want to attach to the inline keyboard
     url = 'https://t.me/' + settings.TELEGRAM_USERNAME + "?start=poll" + str(pk)
 
     # Create the inline keyboard
@@ -56,19 +83,18 @@ def poll_send(request, pk):
         return redirect(reverse('admin:polls_poll_changelist'))
 
     channel = poll.channel
-    message = {
-        'chat_id': channel.channel_id,
-        'text': message_text,
-        'reply_markup': {
-            'inline_keyboard': inline_keyboard
-        },
-        'parse_mode': 'HTML'
-    }
-
-    # Send the message using the Telegram Bot API
-    url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
-    response = requests.post(url, json=message)
-
+    if poll.photo:
+        cache_path = settings.MEDIA_ROOT
+        compressed_image = poll.photo_compress.url
+        compressed_image_path = cache_path + compressed_image[len(settings.MEDIA_URL):]
+        response = send_media_group(text=message_text,
+                                    chat_id=channel.channel_id,
+                                    media=compressed_image_path,
+                                    reply_markup=inline_keyboard)
+    else:
+        response = send_notifications_text(text=message_text,
+                                           chat_id=channel.channel_id,
+                                           reply_markup=inline_keyboard)
     # Check if the message was sent successfully
     if response.status_code == 200:
         poll.message_id = str(response.json()['result']['message_id'])
