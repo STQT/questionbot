@@ -55,13 +55,13 @@ async def user_subscription_msg(bot, chat_id_list, user_id):
 async def check_subscriber_with_poll_id(m: types.Message, db: Database, poll, user_id):
     poll_id = poll['id']
     channel_list = await db.get_poll_owner_channels(poll_id)
-    logging.info(channel_list)
     unsubscribed_channel_list = await user_subscription_msg(m.bot, channel_list, user_id)
-    logging.info(unsubscribed_channel_list)
     if unsubscribed_channel_list:
         return await m.answer("Ushbu botdan foydalanish uchun quyidagi kanallarga a'zo bo'lish kerak",
                               reply_markup=channels_keyboard(unsubscribed_channel_list, poll_id))
-    return await m.answer(poll['text'], reply_markup=choices_kb(poll_id, poll['choices']), parse_mode="HTML")
+    return await m.answer(poll['text'].replace("<br />", "\n"),
+                          reply_markup=choices_kb(poll_id, poll['choices']),
+                          parse_mode="HTML")
 
 
 async def main_start_handler(m: types.Message, state: FSMContext, db: Database):
@@ -96,7 +96,6 @@ async def main_start_handler(m: types.Message, state: FSMContext, db: Database):
 async def submit_subscribe(call: types.CallbackQuery, db: Database):
     await call.answer("Tanlandi")
     _submit_channel, poll_id = call.data.split(":")
-    logging.info(poll_id)
     await call.message.delete()
     poll = await db.get_poll(poll_id)
     await check_subscriber_with_poll_id(call.message, db, poll, call.from_user.id)
