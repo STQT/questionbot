@@ -51,6 +51,7 @@ class Choice(models.Model):
     def vote_count(self):
         return self.vote_set.count()
 
+
 class Vote(models.Model):
     user = models.ForeignKey(Voter, verbose_name="Ovoz beruvchi", on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, verbose_name="Savol", on_delete=models.CASCADE)
