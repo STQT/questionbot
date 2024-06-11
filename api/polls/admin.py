@@ -19,6 +19,7 @@ User = get_user_model()
 class PollChoicesInline(admin.TabularInline):
     model = Choice
     extra = 2
+    readonly_fields = ('vote_count',)
 
     def has_change_permission(self, request, obj=None):
         if request.user.is_staff:
@@ -35,6 +36,10 @@ class PollChoicesInline(admin.TabularInline):
             return True
         return super().has_delete_permission(request, obj)
 
+    def vote_count(self, obj):
+        return obj.vote_count
+
+    vote_count.short_description = 'Vote Count'
 
 @admin.register(Poll)
 class PollAdmin(ImportExportModelAdmin, StaffAdmin):

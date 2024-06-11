@@ -49,7 +49,7 @@ class Choice(models.Model):
 
     @property
     def vote_count(self):
-        return self.vote_set.count()
+        return self.voting.count()  # noqa
 
 
 class Vote(models.Model):
