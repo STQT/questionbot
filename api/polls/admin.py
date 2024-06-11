@@ -10,6 +10,8 @@ from django.utils.safestring import mark_safe
 from api.contrib.admin import StaffAdmin
 from api.polls.forms import PollModelAdminForm
 from api.polls.models import Poll, Choice, Vote
+from import_export.admin import ImportExportModelAdmin
+from api.polls.resources import ChoiceResource, PollResource, VoteResource
 
 User = get_user_model()
 
@@ -35,10 +37,12 @@ class PollChoicesInline(admin.TabularInline):
 
 
 @admin.register(Poll)
-class PollAdmin(StaffAdmin):
+class PollAdmin(ImportExportModelAdmin, StaffAdmin):
     inlines = [PollChoicesInline]
     app_model_string = "polls_poll"
     form = PollModelAdminForm
+    resource_class = PollResource
+    list_display = ('text', 'owner', 'channel', 'created_at', 'closed_at', 'is_sent')
 
     def save_model(self, request, obj, form, change):
         utc_time = obj.closed_at
@@ -71,16 +75,18 @@ class PollAdmin(StaffAdmin):
 
 
 @admin.register(Choice)
-class ChoiceAdmin(admin.ModelAdmin):
-    ...
+class ChoiceAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = ChoiceResource
+    list_display = ('text', 'poll')
 
     def has_module_permission(self, request):
         return request.user.is_superuser
 
 
 @admin.register(Vote)
-class VoteAdmin(admin.ModelAdmin):
-    ...
+class VoteAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = VoteResource
+    list_display = ('user', 'poll', 'choice')
 
     def has_module_permission(self, request):
         return request.user.is_superuser
