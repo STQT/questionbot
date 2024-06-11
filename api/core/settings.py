@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django_celery_beat",
     "drf_spectacular",
     "ckeditor",
+    "import_export",
 
     "api.polls",
     "api.channels",
