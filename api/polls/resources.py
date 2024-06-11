@@ -4,6 +4,7 @@ from .models import Poll, Choice, Vote
 from django.contrib.auth.models import User
 from api.channels.models import Channel
 
+
 class PollResource(resources.ModelResource):
     owner = fields.Field(
         column_name='owner',
@@ -24,6 +25,7 @@ class PollResource(resources.ModelResource):
     def dehydrate_vote_count(self, poll):
         return poll.vote_set.count()
 
+
 class ChoiceResource(resources.ModelResource):
     poll = fields.Field(
         column_name='poll',
@@ -33,6 +35,7 @@ class ChoiceResource(resources.ModelResource):
     class Meta:
         model = Choice
         fields = ('id', 'poll', 'text')
+
 
 class VoteResource(resources.ModelResource):
     user = fields.Field(

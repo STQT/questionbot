@@ -77,10 +77,17 @@ class PollAdmin(ImportExportModelAdmin, StaffAdmin):
 @admin.register(Choice)
 class ChoiceAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = ChoiceResource
-    list_display = ('text', 'poll')
+    list_display = ('text', 'poll', 'votes_count')
+    list_filter = ('poll',)
 
     def has_module_permission(self, request):
         return request.user.is_superuser
+
+    def votes_count(self, obj):
+        return obj.voting.all().count()
+
+    votes_count.short_description = 'Ovoz soni'
+    votes_count.allow_tags = True
 
 
 @admin.register(Vote)

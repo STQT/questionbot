@@ -29,7 +29,7 @@ class Poll(models.Model):
         verbose_name_plural = "Savollar "
 
     def __str__(self):
-        return self.text
+        return str(self.id)
 
     def get_choice_counts(self):
         return self.choices.annotate(vote_count=Count('voting')).values('text', 'vote_count')  # noqa
